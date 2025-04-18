@@ -8,4 +8,15 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
+  overrides: [
+    {
+      files: ["test/**"],
+      plugins: ["jest"],
+      extends: ["plugin:jest/recommended"],
+      rules: { "jest/prefer-expect-assertions": "off" },
+    },
+  ],
+  rules: {
+    indent: ["error", 2],
+  },
 };

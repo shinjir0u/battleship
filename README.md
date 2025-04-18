@@ -1,4 +1,6 @@
-# Web Template
+# Battleship
 
-    This is to serve as a template for a web project that uses webpack for bundling.
-    Simply use this as a template during git repository creation to get a pre-setup project environment with webpack.
+This aims to practice the use of Test Driven Development(TDD) to build a project.
+
+Battleship is a game where players guess the locations of the opponent's ships and destroy them.
+First player to sink all of the enemy's ships win!

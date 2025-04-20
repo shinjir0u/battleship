@@ -1,0 +1,130 @@
+/*
+  Josh's Custom CSS Reset
+  https://www.joshwcomeau.com/css/custom-css-reset/
+*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+p {
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 100px 1fr;
+  justify-items: center;
+  padding: 1rem;
+}
+
+.title {
+  place-self: center;
+}
+
+.game-container {
+  display: grid;
+  grid-template-areas:
+    "message message"
+    "gameboard1 gameboard2";
+  grid-template-columns: 30vw 30vw;
+  grid-template-rows: 50px 1fr;
+  gap: 50px;
+}
+
+.result-message {
+  grid-area: message;
+}
+
+.gameboard1 {
+  grid-area: gameboard1;
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  grid-template-columns: repeat(10, 1fr);
+  border: 1px solid black;
+  background-color: yellow;
+  gap: 2px;
+  padding: 2px;
+}
+
+.gameboard2 {
+  grid-area: gameboard2;
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  grid-template-columns: repeat(10, 1fr);
+  border: 1px solid black;
+  background-color: yellow;
+  gap: 2px;
+  padding: 2px;
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    border: 1px solid gray;
+    background-color: red;
+    cursor: pointer;
+}
+
+.square:hover {
+    background-color: crimson;
+}

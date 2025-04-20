@@ -61,7 +61,7 @@ class Game {
   #displayGameBoard(player, gameboardElement) {
     gameboardElement.textContext = "";
     const gameboard = player.getBoard();
-    gameboard.forEach((row, rowIndex) => {
+    gameboard.getBoard().forEach((row, rowIndex) => {
       row.forEach((column, columnIndex) => {
         const squareButton = document.createElement("button");
         squareButton.dataset.rowIndex = rowIndex;

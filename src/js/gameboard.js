@@ -127,6 +127,10 @@ class GameBoard {
   setPatrolboatLocation(patrolboatLocation) {
     this.#patrolboatLocation = patrolboatLocation;
   }
+
+  getBoard() {
+    return this.#board;
+  }
 }
 
 export default GameBoard;

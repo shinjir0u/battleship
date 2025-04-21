@@ -84,7 +84,7 @@ h6 {
   grid-template-areas:
     "message message"
     "gameboard1 gameboard2";
-  grid-template-columns: 30vw 30vw;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 50px 1fr;
   gap: 50px;
 }
@@ -96,8 +96,8 @@ h6 {
 .gameboard1 {
   grid-area: gameboard1;
   display: grid;
-  grid-template-rows: repeat(10, 1fr);
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 50px);
+  grid-template-columns: repeat(10, 50px);
   border: 1px solid black;
   background-color: yellow;
   gap: 2px;
@@ -107,8 +107,8 @@ h6 {
 .gameboard2 {
   grid-area: gameboard2;
   display: grid;
-  grid-template-rows: repeat(10, 1fr);
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 50px);
+  grid-template-columns: repeat(10, 50px);
   border: 1px solid black;
   background-color: yellow;
   gap: 2px;
@@ -123,8 +123,4 @@ h6 {
     border: 1px solid gray;
     background-color: red;
     cursor: pointer;
-}
-
-.square:hover {
-    background-color: crimson;
 }

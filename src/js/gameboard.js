@@ -3,6 +3,8 @@ import Ship from "./ship";
 class GameBoard {
   #board = Array.from({ length: 10 }, () => Array(10).fill(0));
 
+  #foggedBoard = Array.from({ length: 10 }, () => Array(10).fill(null));
+
   #carrierLocation;
 
   #battleshipLocation;
@@ -12,8 +14,6 @@ class GameBoard {
   #submarineLocation;
 
   #patrolboatLocation;
-
-  #receivedAttacks;
 
   #ships;
 
@@ -29,16 +29,22 @@ class GameBoard {
     this.#destroyerLocation = destroyerLocation;
     this.#submarineLocation = submarineLocation;
     this.#patrolboatLocation = patrolboatLocation;
+    this.setup();
   }
 
   receiveAttack(x, y) {
-    if (x >= 10 || this.#board[x][y] === undefined) return "invalid";
-    if (this.#receivedAttacks.has(`${x}, ${y}`)) return "attacked";
-    this.#receivedAttacks.add(`${x}, ${y}`);
-    if (this.#board[x][y] === 0) return "miss";
+    const foggedBoard = this.#foggedBoard;
+    if (x >= 10 || this.#board[x] === undefined) return "invalid";
+    if (this.#foggedBoard[x][y]) return "attacked";
+    if (this.#board[x][y] === 0) {
+      this.#foggedBoard[x][y] = 0;
+      return "miss";
+    }
+    const value = this.#board[x][y];
     if (this.#ships.has(this.#board[x][y])) {
-      const shipObject = this.#ships.get(this.#board[x][y]).ship;
-      const numberOfTimesHit = shipObject.hit();
+      const shipObject = this.#ships.get(this.#board[x][y]);
+      this.#foggedBoard[x][y] = shipObject.symbol;
+      const numberOfTimesHit = shipObject.ship.hit();
       return "attack";
     }
     return "invalid";
@@ -53,7 +59,7 @@ class GameBoard {
   setup() {
     this.#ships = new Map([
       [
-        "carrier",
+        "Carrier",
         {
           ship: new Ship("Carrier", 5),
           location: this.#carrierLocation,
@@ -61,7 +67,7 @@ class GameBoard {
         },
       ],
       [
-        "battleship",
+        "Battleship",
         {
           ship: new Ship("Battleship", 4),
           location: this.#battleshipLocation,
@@ -69,7 +75,7 @@ class GameBoard {
         },
       ],
       [
-        "destroyer",
+        "Destroyer",
         {
           ship: new Ship("Destroyer", 3),
           location: this.#destroyerLocation,
@@ -77,7 +83,7 @@ class GameBoard {
         },
       ],
       [
-        "submarine",
+        "Submarine",
         {
           ship: new Ship("Submarine", 3),
           location: this.#submarineLocation,
@@ -85,7 +91,7 @@ class GameBoard {
         },
       ],
       [
-        "patrolboat",
+        "Patrol Boat",
         {
           ship: new Ship("Patrol Boat", 2),
           location: this.#patrolboatLocation,
@@ -93,7 +99,6 @@ class GameBoard {
         },
       ],
     ]);
-    this.#receivedAttacks = new Set();
     this.#board = this.#setShipsOnBoard(this.#ships, this.#board);
   }
 
@@ -102,7 +107,7 @@ class GameBoard {
     ships.forEach((ship, shipName, map) => {
       const locations = ship.location;
       locations.forEach((location) => {
-        gameboard[location[0]][location[1]] = shipName;
+        gameboard[location[0]][location[1]] = ship.ship.name();
       });
     });
     return gameboard;
@@ -130,6 +135,10 @@ class GameBoard {
 
   getBoard() {
     return this.#board;
+  }
+
+  getFoggedBoard() {
+    return this.#foggedBoard;
   }
 }
 

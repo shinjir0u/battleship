@@ -40,7 +40,11 @@ class Game {
 
   #player2GameBoard = document.querySelector(".gameboard2");
 
-  #playerToGetAttacked;
+  #player1GameBoardEventHandler;
+
+  #player2GameBoardEventHandler;
+
+  #gameboardEvents;
 
   constructor(
     player1 = new Player("Player1", new GameBoard(defaultGameboard)),
@@ -48,7 +52,6 @@ class Game {
   ) {
     this.#player1 = player1;
     this.#player2 = player2;
-    this.#playerToGetAttacked = player2;
   }
 
   #playRound(playerToGetAttacked, attackLocationX, attackLocationY) {
@@ -59,9 +62,10 @@ class Game {
   }
 
   #displayGameBoard(player, gameboardElement) {
-    gameboardElement.textContext = "";
+    gameboardElement.textContent = "";
     const gameboard = player.getBoard();
-    gameboard.getBoard().forEach((row, rowIndex) => {
+    const foggedBoard = gameboard.getFoggedBoard();
+    gameboard.getFoggedBoard().forEach((row, rowIndex) => {
       row.forEach((column, columnIndex) => {
         const squareButton = document.createElement("button");
         squareButton.dataset.rowIndex = rowIndex;
@@ -74,16 +78,85 @@ class Game {
   }
 
   startGame() {
-    this.#playerToGetAttacked = this.#player2;
+    this.#gameboardEvents = {
+      one: {
+        currentPlayer: this.#player2,
+        attackedPlayer: this.#player1,
+        boardElement: this.#player1GameBoard,
+        currentHandler: this.#player1GameBoardEventHandler,
+        addNextHandler: () => this.#addGameBoard2ClickEventHandler(),
+      },
+      two: {
+        currentPlayer: this.#player1,
+        attackedPlayer: this.#player2,
+        boardElement: this.#player2GameBoard,
+        currentHandler: this.#player2GameBoardEventHandler,
+        addNextHandler: () => this.#addGameBoard1ClickEventHandler(),
+      },
+    };
+    this.#addEventsHandlers();
     this.#displayGameBoard(this.#player1, this.#player1GameBoard);
     this.#displayGameBoard(this.#player2, this.#player2GameBoard);
     return this;
   }
 
-  #switchPlayer() {
-    if (this.#playerToGetAttacked.name === this.#player1.name)
-      return this.#player2;
-    return this.#player1;
+  #addEventsHandlers() {
+    this.#player1GameBoardEventHandler = this.#gameBoardClickEvent(
+      this.#player1.getBoard(),
+      "one",
+    );
+    this.#player2GameBoardEventHandler = this.#gameBoardClickEvent(
+      this.#player2.getBoard(),
+      "two",
+    );
+    this.#addGameBoard2ClickEventHandler();
+  }
+
+  #gameBoardClickEvent(gameBoard, key) {
+    return (event) => {
+      if (event.target.rowIndex === null) return null;
+
+      const attackLocationX = event.target.dataset.rowIndex;
+      const attackLocationY = event.target.dataset.columnIndex;
+      const result = gameBoard.receiveAttack(attackLocationX, attackLocationY);
+
+      const gameBoardEventObject = this.#gameboardEvents[key];
+      if (result === "miss") {
+        gameBoardEventObject.boardElement.removeEventListener(
+          "click",
+          gameBoardEventObject.currentHandler,
+        );
+        gameBoardEventObject.addNextHandler();
+      }
+      this.#displayGameBoard(
+        gameBoardEventObject.attackedPlayer,
+        gameBoardEventObject.boardElement,
+      );
+
+      return this;
+    };
+  }
+
+  #addGameBoard1ClickEventHandler() {
+    this.#player1GameBoard.addEventListener(
+      "click",
+      this.#player1GameBoardEventHandler,
+    );
+    this.#player2GameBoard.removeEventListener(
+      "click",
+      this.#player2GameBoardEventHandler,
+    );
+  }
+
+  #addGameBoard2ClickEventHandler() {
+    this.#player2GameBoard.addEventListener(
+      "click",
+      this.#player2GameBoardEventHandler,
+    );
+    this.#player1GameBoard.removeEventListener(
+      "click",
+      this.#player1GameBoardEventHandler,
+    );
   }
 
   setPlayer1(player) {

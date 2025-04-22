@@ -15,6 +15,10 @@ class Player {
   getBoard() {
     return this.#gameboard;
   }
+
+  getName() {
+    return this.#name;
+  }
 }
 
 export default Player;

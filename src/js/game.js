@@ -40,6 +40,8 @@ class Game {
 
   #player2GameBoard = document.querySelector(".gameboard2");
 
+  #gameBoardMessage = document.querySelector(".result-message");
+
   #player1GameBoardEventHandler;
 
   #player2GameBoardEventHandler;
@@ -52,13 +54,6 @@ class Game {
   ) {
     this.#player1 = player1;
     this.#player2 = player2;
-  }
-
-  #playRound(playerToGetAttacked, attackLocationX, attackLocationY) {
-    const result = playerToGetAttacked
-      .getBoard()
-      .receiveAttack(attackLocationX, attackLocationY);
-    return result;
   }
 
   #displayGameBoard(player, gameboardElement) {
@@ -83,6 +78,7 @@ class Game {
         currentPlayer: this.#player2,
         attackedPlayer: this.#player1,
         boardElement: this.#player1GameBoard,
+        otherBoardElement: this.#player2GameBoard,
         currentHandler: this.#player1GameBoardEventHandler,
         addNextHandler: () => this.#addGameBoard2ClickEventHandler(),
       },
@@ -90,13 +86,17 @@ class Game {
         currentPlayer: this.#player1,
         attackedPlayer: this.#player2,
         boardElement: this.#player2GameBoard,
+        otherBoardElement: this.#player1GameBoard,
         currentHandler: this.#player2GameBoardEventHandler,
         addNextHandler: () => this.#addGameBoard1ClickEventHandler(),
       },
     };
+    this.#gameBoardMessage.textContent = "Game Start. Player 1's turn.";
     this.#addEventsHandlers();
     this.#displayGameBoard(this.#player1, this.#player1GameBoard);
     this.#displayGameBoard(this.#player2, this.#player2GameBoard);
+    const whiteMask = this.#createWhiteMask();
+    this.#player1GameBoard.appendChild(whiteMask);
     return this;
   }
 
@@ -119,22 +119,45 @@ class Game {
       const attackLocationX = event.target.dataset.rowIndex;
       const attackLocationY = event.target.dataset.columnIndex;
       const result = gameBoard.receiveAttack(attackLocationX, attackLocationY);
+      const isGameOver = gameBoard.isAllShipsSunk();
 
       const gameBoardEventObject = this.#gameboardEvents[key];
+      if (isGameOver) {
+        this.#gameBoardMessage.textContent = `Game Over. ${gameBoardEventObject.currentPlayer.getName()} wins.`
+        return this;
+      }
+      this.#gameBoardMessage.textContent = `${result}. `;
+      let nextPlayer = gameBoardEventObject.currentPlayer.getName();
+      const whiteMask = this.#createWhiteMask();
+
+      this.#gameBoardMessage.textContent += `${nextPlayer}'s turn.`;
+      this.#displayGameBoard(
+        gameBoardEventObject.attackedPlayer,
+        gameBoardEventObject.boardElement,
+      );
+      this.#displayGameBoard(
+        gameBoardEventObject.currentPlayer,
+        gameBoardEventObject.otherBoardElement,
+      );
       if (result === "miss") {
         gameBoardEventObject.boardElement.removeEventListener(
           "click",
           gameBoardEventObject.currentHandler,
         );
+        nextPlayer = gameBoardEventObject.attackedPlayer.getName();
         gameBoardEventObject.addNextHandler();
+        gameBoardEventObject.boardElement.appendChild(whiteMask);
+      } else {
+        gameBoardEventObject.otherBoardElement.appendChild(whiteMask);
       }
-      this.#displayGameBoard(
-        gameBoardEventObject.attackedPlayer,
-        gameBoardEventObject.boardElement,
-      );
-
       return this;
     };
+  }
+
+  #createWhiteMask() {
+    const whiteMask = document.createElement("div");
+    whiteMask.classList.add("white-mask");
+    return whiteMask;
   }
 
   #addGameBoard1ClickEventHandler() {

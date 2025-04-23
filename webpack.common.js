@@ -10,7 +10,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/battleship.html",
+      template: "./src/shipSetup.html",
     }),
   ],
   module: {

@@ -84,8 +84,8 @@ h6 {
   grid-template-areas:
     "message message"
     "gameboard1 gameboard2";
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 50px 1fr;
+  grid-template-columns: auto auto;
+  grid-template-rows: 50px min-content;
   gap: 50px;
 }
 
@@ -111,7 +111,7 @@ h6 {
   grid-template-rows: repeat(10, 50px);
   grid-template-columns: repeat(10, 50px);
   border: 1px solid black;
-  background-color: rgba(255, 255, 0);
+  background-color: red;
   gap: 2px;
   padding: 2px;
   position: relative;
@@ -123,8 +123,16 @@ h6 {
   align-items: center;
   font-size: 2em;
   border: 1px solid gray;
-  background-color: red;
+  background-color: white;
   cursor: pointer;
+}
+
+.missed-square {
+  background-color: rgba(206, 203, 203, 0.5);
+}
+
+.attacked-square {
+  background-color: blue;
 }
 
 .white-mask {
@@ -133,4 +141,88 @@ h6 {
   z-index: 1;
   width: 100%;
   height: 100%;
+}
+
+.setup-page .message {
+  grid-area: message;
+}
+
+.setup-page .ships-setup {
+  grid-area: gameboard1;
+}
+
+.setup-page .gameboard {
+  grid-area: gameboard2;
+  display: grid;
+  grid-template-rows: repeat(10, 50px);
+  grid-template-columns: repeat(10, 50px);
+  border: 1px solid black;
+  background-color: red;
+  gap: 2px;
+  padding: 2px;
+  position: relative;
+}
+
+.ships-setup {
+  display: grid;
+  width: 800px;
+  grid-template-rows: 30px 1fr;
+  gap: 1rem;
+}
+
+.ships-setup .ships {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.ships-setup .ships > div {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  min-width: 100px;
+}
+
+.ships-setup .ship {
+  background-color: blue;
+  height: 50px;
+  border-radius: 10px;
+  padding: 1px;
+}
+
+.ships-setup .carrier {
+  width: 250px;
+}
+
+.ships-setup .battleship {
+  width: 200px;
+}
+.ships-setup .destroyer,
+.ships-setup .submarine {
+  width: 150px;
+}
+.ships-setup .patrol-boat {
+  width: 100px;
+}
+
+.ships-setup .ship.vertical {
+  background-color: blue;
+  width: 50px;
+  border-radius: 10px;
+  padding: 1px;
+}
+
+.ships-setup .carrier.vertical {
+  height: 250px;
+}
+
+.ships-setup .battleship.vertical {
+  height: 200px;
+}
+.ships-setup .destroyer.vertical,
+.ships-setup .submarine.vertical {
+  height: 150px;
+}
+.ships-setup .patrol-boat.vertical {
+  height: 100px;
 }

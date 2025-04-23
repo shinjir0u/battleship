@@ -23,7 +23,7 @@ class GameBoard {
     destroyerLocation,
     submarineLocation,
     patrolboatLocation,
-  }) {
+  } = {}) {
     this.#carrierLocation = carrierLocation;
     this.#battleshipLocation = battleshipLocation;
     this.#destroyerLocation = destroyerLocation;

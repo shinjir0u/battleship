@@ -66,7 +66,9 @@ class Game {
         squareButton.dataset.rowIndex = rowIndex;
         squareButton.dataset.columnIndex = columnIndex;
         squareButton.classList.add("square");
-        squareButton.textContent = column;
+        if (column === 0) squareButton.classList.add("missed-square");
+        else if (column === null) {
+        } else squareButton.classList.add("attacked-square");
         gameboardElement.appendChild(squareButton);
       });
     });
@@ -122,10 +124,6 @@ class Game {
       const isGameOver = gameBoard.isAllShipsSunk();
 
       const gameBoardEventObject = this.#gameboardEvents[key];
-      if (isGameOver) {
-        this.#gameBoardMessage.textContent = `Game Over. ${gameBoardEventObject.currentPlayer.getName()} wins.`
-        return this;
-      }
       this.#gameBoardMessage.textContent = `${result}. `;
       let nextPlayer = gameBoardEventObject.currentPlayer.getName();
       const whiteMask = this.#createWhiteMask();
@@ -139,6 +137,10 @@ class Game {
         gameBoardEventObject.currentPlayer,
         gameBoardEventObject.otherBoardElement,
       );
+      if (isGameOver) {
+        this.#gameBoardMessage.textContent = `Game Over. ${gameBoardEventObject.currentPlayer.getName()} wins.`;
+        return this;
+      }
       if (result === "miss") {
         gameBoardEventObject.boardElement.removeEventListener(
           "click",

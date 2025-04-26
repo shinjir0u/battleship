@@ -5,18 +5,38 @@ class ShipSetup {
 
   #rotateButton = document.querySelector(".rotate-button");
 
+  #resetButton = document.querySelector(".reset-button");
+
   #shipSetupData;
 
   constructor(player) {
     this.#player = player;
-    this.#rotateButton.addEventListener("click", this.#rotateButtonEvent);
+    this.#resetButton.addEventListener("click", () => this.#resetButtonEvent());
+    this.#rotateButton.addEventListener("click", () =>
+      this.#rotateButtonEvent(),
+    );
     this.#addDragEffects();
     this.#shipSetupData = new Map([
-      ["carrier", (location) => this.#player.getBoard().setCarrierLocation(location)],
-      ["battleship", (location) => this.#player.getBoard().setBattleshipLocation(location)],
-      ["destroyer", (location) => this.#player.getBoard().setDestroyerLocation(location)],
-      ["submarine", (location) => this.#player.getBoard().setSubmarineLocation(location)],
-      ["patrol-boat", (location) => this.#player.getBoard().setPatrolboatLocation(location)],
+      [
+        "carrier",
+        (location) => this.#player.getBoard().setCarrierLocation(location),
+      ],
+      [
+        "battleship",
+        (location) => this.#player.getBoard().setBattleshipLocation(location),
+      ],
+      [
+        "destroyer",
+        (location) => this.#player.getBoard().setDestroyerLocation(location),
+      ],
+      [
+        "submarine",
+        (location) => this.#player.getBoard().setSubmarineLocation(location),
+      ],
+      [
+        "patrol-boat",
+        (location) => this.#player.getBoard().setPatrolboatLocation(location),
+      ],
     ]);
   }
 
@@ -42,6 +62,13 @@ class ShipSetup {
       else ship.classList.add("vertical");
     });
     return this;
+  }
+
+  #resetButtonEvent(event) {
+    const shipsElement = document.querySelectorAll(".ship");
+    shipsElement.forEach((ship) => (ship.hidden = false));
+
+    this.displayBoard();
   }
 
   #setShipOnBoard(ship, location) {
@@ -100,7 +127,7 @@ class ShipSetup {
       newShip.style.left = `${x * cellSize + x * 2}px`;
       newShip.style.top = `${y * cellSize + y * 2}px`;
       this.#gameboardElement.appendChild(newShip);
-      draggedShip.remove();
+      draggedShip.hidden = true;
     });
   }
 }

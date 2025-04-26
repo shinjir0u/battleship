@@ -128,6 +128,15 @@ class GameBoard {
     return gameboard;
   }
 
+  clear() {
+    this.#shipsLocation = [];
+    this.#carrierLocation = [];
+    this.#battleshipLocation = [];
+    this.#destroyerLocation = [];
+    this.#patrolboatLocation = [];
+    this.#submarineLocation = [];
+  }
+
   isLocationValid(location) {
     const locations = this.#shipsLocation;
     const loca = location;

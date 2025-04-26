@@ -183,11 +183,10 @@ h6 {
   min-width: 100px;
 }
 
-.ships-setup .ship {
+.ships-setup .ship, .placed-ship {
   background-color: blue;
   height: 50px;
   border-radius: 10px;
-  padding: 1px;
 }
 
 .ships-setup .carrier {
@@ -225,4 +224,8 @@ h6 {
 }
 .ships-setup .patrol-boat.vertical {
   height: 100px;
+}
+
+.placed-ship {
+  position: absolute;
 }

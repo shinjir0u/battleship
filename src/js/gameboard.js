@@ -17,12 +17,14 @@ class GameBoard {
 
   #ships;
 
+  #shipsLocation = [];
+
   constructor({
-    carrierLocation,
-    battleshipLocation,
-    destroyerLocation,
-    submarineLocation,
-    patrolboatLocation,
+    carrierLocation = [],
+    battleshipLocation = [],
+    destroyerLocation = [],
+    submarineLocation = [],
+    patrolboatLocation = [],
   } = {}) {
     this.#carrierLocation = carrierLocation;
     this.#battleshipLocation = battleshipLocation;
@@ -99,7 +101,20 @@ class GameBoard {
         },
       ],
     ]);
+    this.#ships.forEach((ship) => {
+      this.#shipsLocation = [
+        ...this.#shipsLocation,
+        ...ship.location.map((location) => location.toString()),
+      ];
+    });
     this.#board = this.#setShipsOnBoard(this.#ships, this.#board);
+  }
+
+  #updateLocation(location) {
+    this.#shipsLocation = [
+      ...this.#shipsLocation,
+      ...location.map((point) => point.toString()),
+    ];
   }
 
   #setShipsOnBoard(ships, board) {
@@ -113,24 +128,48 @@ class GameBoard {
     return gameboard;
   }
 
+  isLocationValid(location) {
+    const locations = this.#shipsLocation;
+    const loca = location;
+    return (
+      location.filter((point) => this.#shipsLocation.includes(point.toString()))
+        .length === 0
+    );
+  }
+
   setCarrierLocation(carrierLocation) {
+    if (!this.isLocationValid(carrierLocation)) return null;
     this.#carrierLocation = carrierLocation;
+    this.#updateLocation(carrierLocation);
+    return "set";
   }
 
   setBattleshipLocation(battleshipLocation) {
+    if (!this.isLocationValid(battleshipLocation)) return null;
     this.#battleshipLocation = battleshipLocation;
+    this.#updateLocation(battleshipLocation);
+    return "set";
   }
 
   setDestroyerLocation(destroyerLocation) {
+    if (!this.isLocationValid(destroyerLocation)) return null;
     this.#destroyerLocation = destroyerLocation;
+    this.#updateLocation(destroyerLocation);
+    return "set";
   }
 
   setSubmarineLocation(submarineLocation) {
+    if (!this.isLocationValid(submarineLocation)) return null;
     this.#submarineLocation = submarineLocation;
+    this.#updateLocation(submarineLocation);
+    return "set";
   }
 
   setPatrolboatLocation(patrolboatLocation) {
+    if (!this.isLocationValid(patrolboatLocation)) return null;
     this.#patrolboatLocation = patrolboatLocation;
+    this.#updateLocation(patrolboatLocation);
+    return "set";
   }
 
   getBoard() {

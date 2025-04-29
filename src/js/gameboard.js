@@ -37,7 +37,7 @@ class GameBoard {
   receiveAttack(x, y) {
     const foggedBoard = this.#foggedBoard;
     if (x >= 10 || this.#board[x] === undefined) return "invalid";
-    if (this.#foggedBoard[x][y]) return "attacked";
+    if (this.#foggedBoard[x][y] === 0) return "attacked";
     if (this.#board[x][y] === 0) {
       this.#foggedBoard[x][y] = 0;
       return "miss";
@@ -126,6 +126,17 @@ class GameBoard {
       });
     });
     return gameboard;
+  }
+
+  isSetupDone() {
+    const ships = [
+      this.#carrierLocation,
+      this.#battleshipLocation,
+      this.#destroyerLocation,
+      this.#patrolboatLocation,
+      this.#submarineLocation,
+    ];
+    return ships.every((ship) => ship.length > 0);
   }
 
   clear() {

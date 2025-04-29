@@ -1,6 +1,8 @@
 class ShipSetup {
   #player;
 
+  #message = document.querySelector(".result-message");
+
   #gameboardElement = document.querySelector(".gameboard");
 
   #rotateButton = document.querySelector(".rotate-button");
@@ -15,6 +17,7 @@ class ShipSetup {
     this.#rotateButton.addEventListener("click", () =>
       this.#rotateButtonEvent(),
     );
+    this.displayMessage();
     this.#addDragEffects();
     this.#shipSetupData = new Map([
       [
@@ -52,6 +55,18 @@ class ShipSetup {
         this.#gameboardElement.appendChild(squareButton);
       });
     });
+    return this;
+  }
+
+  displayShips() {
+    const hiddenShips = document.querySelectorAll(".ship");
+    hiddenShips.forEach((ship) => (ship.hidden = false));
+    return this;
+  }
+
+  displayMessage() {
+    this.#message.textContent = `${this.#player.getName()}'s turn to setup.`;
+    return this;
   }
 
   #rotateButtonEvent(event) {
@@ -74,6 +89,15 @@ class ShipSetup {
   #setShipOnBoard(ship, location) {
     const setShip = this.#shipSetupData.get(ship);
     return setShip(location);
+  }
+
+  getPlayer() {
+    return this.#player;
+  }
+
+  setPlayer(player) {
+    this.#player = player;
+    return this;
   }
 
   #addDragEffects() {
@@ -103,11 +127,11 @@ class ShipSetup {
       let shipLocation = [];
       if (isVertical) {
         for (let i = 0; i < length; i++) {
-          shipLocation = [...shipLocation, [x, y + i]];
+          shipLocation = [...shipLocation, [y + i, x]];
         }
       } else {
         for (let i = 0; i < length; i++) {
-          shipLocation = [...shipLocation, [x + i, y]];
+          shipLocation = [...shipLocation, [y, x + i]];
         }
       }
       const result = this.#setShipOnBoard(shipType, shipLocation);
@@ -126,6 +150,15 @@ class ShipSetup {
 
       newShip.style.left = `${x * cellSize + x * 2}px`;
       newShip.style.top = `${y * cellSize + y * 2}px`;
+      if (
+        Number(newShip.style.width.split("px")[0]) +
+          Number(newShip.style.left.split("px")[0]) >
+          boardRect.right - boardRect.left ||
+        Number(newShip.style.height.split("px")[0]) +
+          Number(newShip.style.top.split("px")[0]) >
+          boardRect.bottom - boardRect.top
+      )
+        return null;
       this.#gameboardElement.appendChild(newShip);
       draggedShip.hidden = true;
     });
